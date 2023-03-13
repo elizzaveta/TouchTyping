@@ -1,0 +1,20 @@
+.title{
+}
+.wrapper h1, .wrapper h2{
+    color: var(--dark-green);
+}
+.wrapper h1{
+    margin: 20px 0;
+}
+.wrapper h2{
+    margin-bottom: 7px;
+}
+.wrapper p, .wrapper ul{
+    margin-bottom: 15px;
+}
+.wrapper ul{
+    margin-left: 15px;
+}
+.wrapper li::marker {
+    color: var(--green);
+}
