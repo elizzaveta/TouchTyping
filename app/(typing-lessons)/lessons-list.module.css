@@ -1,0 +1,30 @@
+.wrapper{
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid var(--green);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.wrapper p{
+    background: white;
+    border-radius: 5px;
+}
+.difficultyBlock{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: max-content;
+}
+.lessonsList{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.lessonsList p{
+    cursor: pointer;
+}
+.active{
+    text-decoration: underline;
+    font-weight: bolder;
+}

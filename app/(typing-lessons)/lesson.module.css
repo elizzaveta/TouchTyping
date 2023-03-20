@@ -1,0 +1,30 @@
+.lessonText > span{
+    margin-right: 5px;
+}
+.lessonText{
+    font-size: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px;
+    border: 1px solid var(--green);
+    border-radius: 5px;
+    margin: 5px;
+}
+.textarea{
+    width: 100%;
+    margin: 5px;
+    background: #e6e6e652;
+    font-size: 18px;
+    font-family: 'Montserrat';
+    padding: 5px;
+    resize: unset;
+    border-radius: 5px;
+    height: 300px;
+}
+.correct{
+    opacity: 0.4;
+}
+.wrong{
+    opacity: 0.4;
+    color: red;
+}
