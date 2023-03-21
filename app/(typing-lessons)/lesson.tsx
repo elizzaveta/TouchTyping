@@ -4,110 +4,120 @@ import {lessonType} from "@/types/lesson-type";
 import {getLesson} from "@/app/api/hello/route";
 import styles from "./lesson.module.css"
 
+enum Progress {
+    NOT_STARTED,
+    IN_PROGRESS,
+    FINISHED
+}
+
 function Lesson() {
     const [hash, setHash] = useState<string>(window.location.hash);
     const [lesson, setLesson] = useState<lessonType>()
-    const [currentChild, setCurrentChild] = useState<number>(-1);
-    const [finished, setFinished] = useState<boolean>(false);
+    const [currentWord, setCurrentWord] = useState<Element | null>();
+    const [progress, setProgress] = useState<Progress>(Progress.NOT_STARTED);
     const [userInput, setUserInput] = useState<string>("");
 
 
-
+    // event listeners
     useEffect(() => {
-        let textarea = document.getElementById("textarea");
-        if (textarea) {
-            textarea.addEventListener("keydown", handleKeydown, true)
-            return () => {
-                textarea && textarea.removeEventListener("keydown", handleKeydown, true);
-            }
-        }
-    })
-    useEffect(() => {
-        window.addEventListener('hashchange', () => setHash(window.location.hash));
+        document.onkeydown = (e) => handleKeydown(e);
+        window.onhashchange = () => setHash(window.location.hash);
         return () => {
-            window.removeEventListener('hashchange', () => setHash(window.location.hash));
+            window.onhashchange = null;
+            document.onkeydown = null
         };
-    }, []);
+    });
 
+    // hash change
     useEffect(() => {
         (async function () {
             await getLesson(hash.substring(1)).then(data => {
                 setLesson(data);
             });
-            let textarea = document.getElementById("textarea");
-            if(textarea) textarea.value = ''
-            setUserInput('');
-            setFinished(false)
-            setCurrentChild(-1)
-        })()
+        })();
+
+        setUserInput('');
+        setProgress(Progress.NOT_STARTED)
+        setCurrentWord(null)
     }, [hash])
 
-    function handleSpace() {
-        if (finished) {
-            alert("results")
-        } else {
-            setCurrentChild(prevState => prevState + 1);
-        }
-    }
 
-
-    function handleBackSpace(e:KeyboardEvent) {
-
-        if(userInput.substring(userInput.length-1) === ' '){
-            e.preventDefault();
-            return false;
-        }
-    }
-
+    // keydown handlers
     function handleKeydown(e: KeyboardEvent) {
         if (e.code === 'Space') {
             handleSpace();
         } else if (e.key === 'Backspace') {
             handleBackSpace(e);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+        } else if (e.key.length === 1) {
+            setUserInput(prevState => prevState + e.key)
         }
     }
 
+    function handleSpace() {
+        setUserInput(prevState => prevState + ' ')
+        if (!currentWord) {
+            let lessonWords = document.getElementById("lessonText");
+            if (lessonWords) setCurrentWord(lessonWords.firstElementChild);
+        } else {
+            setCurrentWord(prevState => prevState?.nextElementSibling);
+        }
+        // maybe move to timer later ??
+        if (progress === Progress.NOT_STARTED) setProgress(Progress.IN_PROGRESS)
+    }
+
+    function handleBackSpace(e: KeyboardEvent) {
+        if (userInput.substring(userInput.length - 1) !== ' ') {
+            setUserInput(prevState => prevState.substring(0, prevState.length - 1))
+        }
+    }
+
+
+    // check user input
     useEffect(() => {
-        if(currentChild===-1) return;
+        setTimeout(() => { // to scroll next word into view
+            currentWord?.nextElementSibling?.scrollIntoView({block: 'center', behavior: 'smooth'})
+        }, 0)
 
-        let next = document.getElementById("lessonText");
+        if (!currentWord?.nextElementSibling && progress === Progress.IN_PROGRESS) setProgress(Progress.FINISHED);
 
-        if (next) {
-            let words = next.getElementsByTagName("span");
-            if (words.length - 1 === currentChild) setFinished(true);
-            let currWord = words[currentChild];
-            let userWord = userInput.split(" ")[userInput.split(" ").length - 1];
+        if (currentWord) {
+            const userWords = userInput.split(" ").filter(i => i);
+            const userWord = userWords[userWords.length - 1];
 
-            if (currWord.textContent === userWord) {
-                currWord.className = styles.correct;
-            } else {
-                currWord.className = styles.wrong;
-            }
+            if (currentWord.textContent === userWord) currentWord.className = styles.correct;
+            else currentWord.className = styles.wrong;
+
+            if(currentWord.nextElementSibling) currentWord.nextElementSibling.className = styles.current;
         }
-    }, [currentChild])
+    }, [currentWord])
 
-    const handleChange= (event:React.FormEvent<HTMLTextAreaElement>)=>{
-        setUserInput(event.currentTarget.value);
-    }
 
     return (
         <>
-            {lesson &&
+            {lesson && lesson.steps && progress !== Progress.FINISHED &&
                 <div>
                     <h1>{lesson.title}</h1>
-                    {lesson.steps &&
-                        <div id="lessonText" className={styles.lessonText}>
-                            {lesson.steps.map(step => {
-                                return step.split(" ").map((word, index) => {
-                                    return (
-                                        <span key={word + index}>{word}</span>
-                                    )
-                                })
-                            })}
-                        </div>
-                    }
-                    <textarea id="textarea" className={styles.textarea} onChange={handleChange} placeholder="Start typing..."></textarea>
+                    <div id="lessonText" className={styles.lessonText}>
+                        {lesson.steps.map(step => {
+                            return step.split(" ").map((word, index) => {
+                                return (
+                                    <span key={word + index}>{word}</span>
+                                )
+                            })
+                        })}
+                    </div>
+                    <textarea id="textarea" className={styles.textarea}
+                              onChange={(e) => setUserInput(e.currentTarget.value)} placeholder="Start typing..."
+                              value={userInput} disabled={true}>
+
+                    </textarea>
                 </div>
+            }
+            {
+                progress === Progress.FINISHED &&
+                <h1>Results</h1>
             }
         </>
     );

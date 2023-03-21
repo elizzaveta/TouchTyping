@@ -1,30 +1,37 @@
 .lessonText > span{
     margin-right: 5px;
+    scroll-behavior: smooth;
 }
 .lessonText{
     font-size: 20px;
     display: flex;
     flex-wrap: wrap;
-    padding: 5px;
+    padding: 10px;
     border: 1px solid var(--green);
     border-radius: 5px;
     margin: 5px;
+
+    height: 5rem;
+    overflow: hidden;
 }
 .textarea{
     width: 100%;
     margin: 5px;
     background: #e6e6e652;
     font-size: 18px;
-    font-family: 'Montserrat';
-    padding: 5px;
+    padding: 10px;
     resize: unset;
     border-radius: 5px;
     height: 300px;
 }
 .correct{
-    opacity: 0.4;
+    opacity: 0.1;
 }
 .wrong{
     opacity: 0.4;
     color: red;
+}
+.current{
+    text-decoration: underline;
+    text-decoration-color: var(--green);
 }
