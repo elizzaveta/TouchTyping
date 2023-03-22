@@ -2,8 +2,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 12px;
+    padding-bottom: 12px;
     background: var(--green);
 }
 .nav{
@@ -12,5 +12,7 @@
 }
 .name{
     font-family: Notable;
-
+}
+.description{
+    font-size: 12px;
 }

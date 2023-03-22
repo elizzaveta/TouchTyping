@@ -1,0 +1,43 @@
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+.wrapper h1, .wrapper h2, .wrapper h3{
+    color: var(--dark-green);
+}
+.fingerPositionsWrapper{
+    display: flex;
+    justify-content: space-around;
+    width: 100%
+}
+.mainImage{
+    width: 450px;
+    height: auto;
+}
+.startingPositionsImage{
+    width: 320px;
+    height: auto;
+
+}
+.hintBlock{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 15px
+}
+
+@media (min-width: 1000px) {
+    .tip{
+        width: 80%;
+    }
+}
+@media (max-width: 1000px) {
+    .tip{
+        width: 100%;
+    }
+}
