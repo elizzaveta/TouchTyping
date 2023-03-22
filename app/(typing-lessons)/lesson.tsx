@@ -4,6 +4,7 @@ import {lessonType} from "@/types/lesson-type";
 import {getLesson} from "@/app/api/hello/route";
 import styles from "./lesson.module.css"
 import ProgressBar from "@ramonak/react-progress-bar";
+import Results from "@/app/(typing-lessons)/results";
 
 enum Progress {
     NOT_STARTED,
@@ -19,7 +20,10 @@ function Lesson() {
     const [progress, setProgress] = useState<Progress>(Progress.NOT_STARTED);
     const [userInput, setUserInput] = useState<string>("");
     const [numOfTypedWords, setNumOfTypedWords] = useState<number>(0);
-    const [totalNumOfWords, setTotalNumOfWords] = useState<number>(1)
+    const [totalNumOfWords, setTotalNumOfWords] = useState<number>(1);
+    const [startTime, setStartTime] = useState<number>(0);
+    const [endTime, setEndTime] = useState<number>(0);
+    const [numOfErrors, setNumOfErrors] = useState<number>(0);
 
     // event listeners
     useEffect(() => {
@@ -41,15 +45,22 @@ function Lesson() {
             });
         })();
 
+        resetLesson()
+    }, [hash])
+    function resetLesson(){
         setUserInput('');
         setProgress(Progress.NOT_STARTED)
         setCurrentWord(null)
-        setNumOfTypedWords(0)
-    }, [hash])
-
+        setNumOfTypedWords(0);
+        setNumOfErrors(0)
+    }
 
     // keydown handlers
     function handleKeydown(e: KeyboardEvent) {
+        if(progress === Progress.FINISHED){
+            e.preventDefault();
+            return false;
+        }
         if (e.code === 'Space') {
             handleSpace(e);
         } else if (e.key === 'Backspace') {
@@ -62,12 +73,14 @@ function Lesson() {
     }
 
     function handleSpace(e: KeyboardEvent) {
-        e.preventDefault()
+        e.preventDefault();
+        if(userInput.substring(userInput.length-1, userInput.length)===' ') return false;
         setUserInput(prevState => prevState + ' ')
         setNumOfTypedWords(prevState => prevState + 1);
         if (!currentWord) {
             let lessonWords = document.getElementById("lessonText");
             if (lessonWords) setCurrentWord(lessonWords.firstElementChild);
+            setStartTime(new Date().getTime())
         } else {
             setCurrentWord(prevState => prevState?.nextElementSibling);
         }
@@ -88,14 +101,20 @@ function Lesson() {
             currentWord?.nextElementSibling?.scrollIntoView({block: 'center', behavior: 'smooth'})
         }, 0)
 
-        if (!currentWord?.nextElementSibling && progress === Progress.IN_PROGRESS) setProgress(Progress.FINISHED);
+        if (!currentWord?.nextElementSibling && progress === Progress.IN_PROGRESS) {
+            setProgress(Progress.FINISHED);
+            setEndTime(new Date().getTime())
+        }
 
         if (currentWord) {
             const userWords = userInput.split(" ").filter(i => i);
             const userWord = userWords[userWords.length - 1];
 
             if (currentWord.textContent === userWord) currentWord.className = styles.correct;
-            else currentWord.className = styles.wrong;
+            else {
+                currentWord.className = styles.wrong;
+                setNumOfErrors(prevState => prevState+1)
+            }
 
             if (currentWord.nextElementSibling) currentWord.nextElementSibling.className = styles.current;
         }
@@ -136,7 +155,10 @@ function Lesson() {
             }
             {
                 progress === Progress.FINISHED &&
-                <h1>Results</h1>
+                <div>
+                    <Results numOfWords={numOfTypedWords} numOfErrors={numOfErrors} typingTime={endTime - startTime}/>
+                    <button className={styles.button} onClick={resetLesson}>Try Again</button>
+                </div>
             }
         </>
     );
