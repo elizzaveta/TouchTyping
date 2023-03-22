@@ -48,4 +48,11 @@
 .container{
     height: 5px;
 }
-
+.button{
+    margin: 10px;
+    padding: 10px 57px;
+    background: var(--dark-green);
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}

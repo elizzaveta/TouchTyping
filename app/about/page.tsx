@@ -10,6 +10,7 @@ export default function About() {
             <ul>
                 <li>Touch Typing Practice</li>
                 <li>Progress Tracking</li>
+                <li>Touch Typing Cheat Sheet</li>
             </ul>
             <h2>Technologies</h2>
             <ul>

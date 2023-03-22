@@ -1,0 +1,15 @@
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: 10px;
+}
+.wpmBlock{
+    background: var(--green);
+    padding: 13px;
+    border-radius: 5px;
+}
+.wpmAccent{
+    /*font-size: 18px;*/
+    text-decoration: underline;
+}
