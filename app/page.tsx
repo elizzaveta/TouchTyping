@@ -1,13 +1,17 @@
-import { Inter } from 'next/font/google'
 import styles from './page.module.css'
 import React from "react";
-
-const inter = Inter({ subsets: ['latin'] })
+import LessonsList from "@/app/(typing-lessons)/lessons-list";
+import Lesson from "@/app/(typing-lessons)/lesson";
+import Test from "@/app/(typing-lessons)/test";
 
 export default function Home() {
   return (
       <main>
-        <h1>Home page</h1>
+          <div className={styles.wrapper}>
+              <LessonsList/>
+              <Lesson/>
+              {/*<Test/>*/}
+          </div>
       </main>
   )
 }
