@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import {getLessons} from "@/app/api/hello/route";
 import {lessonType} from "@/types/lesson-type";
-import {useRouter} from "next/navigation";
+
 import styles from "./lessons-list.module.css"
 
 type sortedLessonsType = {
@@ -13,7 +13,11 @@ type sortedLessonsType = {
 
 function LessonsList() {
     const [sortedLessons, setSortedLessons] = useState<sortedLessonsType>();
-    const [hash, setHash] = useState<string>(window.location.hash.substring(1));
+    const [hash, setHash] = useState<string>();
+
+    useEffect(()=>{
+        setHash(window.location.hash.substring(1))
+    })
 
     useEffect(() => {
         (async function () {
