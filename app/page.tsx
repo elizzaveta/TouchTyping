@@ -3,11 +3,15 @@ import styles from './page.module.css'
 import React, {useEffect, useState} from "react";
 import LessonsList from "@/app/(typing-lessons)/lessons-list";
 import Lesson from "@/app/(typing-lessons)/lesson";
-import Test from "@/app/(typing-lessons)/test";
 import Link from "next/link";
 
 export default function Home() {
-    const [hash, setHash] = useState<string>(window.location.hash.substring(1))
+    const [hash, setHash] = useState<string>()
+
+    useEffect(()=>{
+        setHash(window.location.hash.substring(1))
+    })
+
     useEffect(() => {
         window.onhashchange = () => {
             console.log('hash change'+window.location.hash.substring(1));
