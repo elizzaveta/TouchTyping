@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-left: 10px;
+    margin-bottom: 10px;
 }
 .wpmBlock{
     background: var(--green);
@@ -10,6 +10,5 @@
     border-radius: 5px;
 }
 .wpmAccent{
-    /*font-size: 18px;*/
     text-decoration: underline;
 }

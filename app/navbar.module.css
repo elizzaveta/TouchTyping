@@ -8,7 +8,7 @@
 }
 .nav{
     display: flex;
-    gap: 10px
+    gap: 25px
 }
 .name{
     font-family: Notable;

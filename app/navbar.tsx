@@ -11,8 +11,8 @@ function Navbar() {
             <div className={styles.nav}>
                 <Link href="/"><b>Home</b></Link>
                 <Link href="/cheat-sheet"><b>CheatSheet</b></Link>
-                <Link href="/about"><b>About</b></Link>
                 <Link href="/progress"><b>Progress</b></Link>
+                <Link href="/about"><b>About</b></Link>
             </div>
         </header>
     );
