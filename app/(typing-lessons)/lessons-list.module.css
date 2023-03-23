@@ -1,6 +1,6 @@
 .wrapper{
     border-radius: 5px;
-    padding: 5px;
+    padding: 10px 15px 15px 15px;
     border: 1px solid var(--green);
     display: flex;
     flex-direction: column;
