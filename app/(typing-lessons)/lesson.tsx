@@ -66,6 +66,9 @@ function Lesson() {
         } else if (e.key === 'Backspace') {
             handleBackSpace(e);
         } else if (e.key === 'Enter') {
+            if(numOfTypedWords+1===totalNumOfWords){
+                handleSpace(e);
+            }
             e.preventDefault();
         } else if (e.key.length === 1) {
             setUserInput(prevState => prevState + e.key)
@@ -145,11 +148,9 @@ function Lesson() {
                                 })
                             })}
                         </div>
-                        <textarea id="textarea" className={styles.textarea}
-                                  onChange={(e) => setUserInput(e.currentTarget.value)} placeholder="Start typing..."
-                                  value={userInput} disabled={true}>
-
-                    </textarea>
+                        <div id="textarea" className={styles.textarea}>
+                            {userInput}<span className={styles.caret}>|</span>
+                    </div>
                     </div>
                 </div>
             }
