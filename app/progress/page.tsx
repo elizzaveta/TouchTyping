@@ -1,13 +1,21 @@
-import { Inter } from 'next/font/google'
-import React from "react";
+'use client'
+import React, {useState} from "react";
+import Plot from "@/app/progress/(components)/plot";
+import Stats from "@/app/progress/(components)/stats";
+import styles from "./page.module.css"
 
-const inter = Inter({ subsets: ['latin'] })
+export default function Progress() {
+    const [counter, setCounter] = useState<number>(0);
 
-export default function Home() {
+    const updateCounter = () => setCounter(counter+1);
+
     return (
         <>
-            <h1>Progress page</h1>
-            <p>This page is still in progress</p>
+            <h1 className={styles.title}>Your Progress</h1>
+            <div className={styles.wrapper}>
+                <Plot counter={counter}/>
+                <Stats callback={updateCounter}  counter={counter}/>
+            </div>
         </>
     )
 }

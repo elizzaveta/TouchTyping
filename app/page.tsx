@@ -30,8 +30,9 @@ export default function Home() {
                     ? <Lesson/>
                     : <div className={styles.welcomeMessage}>
                         <h1>Welcome to TYPER!</h1>
-                        <p>Choose a lesson from the list to practice your touch typing skill.</p>
+                        <p>Choose a lesson to practice your touch typing skill and check your typing speed.</p>
                         <p>Or check <Link href='/cheat-sheet'>Touch Typing Cheat Sheet</Link> first.</p>
+                        <p>Tip: Doggy Heaven is the easiest one.</p>
                     </div>}
 
                 {/*<Test/>*/}
