@@ -5,6 +5,7 @@ import {getLesson} from "@/app/api/hello/route";
 import styles from "./lesson.module.css"
 import ProgressBar from "@ramonak/react-progress-bar";
 import Results from "@/app/(typing-lessons)/results";
+import {addResultsToLocalStorage} from "@/functions/localStorage";
 
 enum Progress {
     NOT_STARTED,
@@ -66,6 +67,9 @@ function Lesson() {
         } else if (e.key === 'Backspace') {
             handleBackSpace(e);
         } else if (e.key === 'Enter') {
+            if(numOfTypedWords+1===totalNumOfWords){
+                handleSpace(e);
+            }
             e.preventDefault();
         } else if (e.key.length === 1) {
             setUserInput(prevState => prevState + e.key)
@@ -104,6 +108,7 @@ function Lesson() {
         if (!currentWord?.nextElementSibling && progress === Progress.IN_PROGRESS) {
             setProgress(Progress.FINISHED);
             setEndTime(new Date().getTime())
+
         }
 
         if (currentWord) {
@@ -115,11 +120,14 @@ function Lesson() {
                 currentWord.className = styles.wrong;
                 setNumOfErrors(prevState => prevState+1)
             }
-
             if (currentWord.nextElementSibling) currentWord.nextElementSibling.className = styles.current;
         }
     }, [currentWord])
 
+    useEffect(()=>{
+        const wpm = parseInt((numOfTypedWords / (((endTime - startTime) / 1000) / 60)).toFixed(0))
+        if(progress===Progress.FINISHED) addResultsToLocalStorage(wpm)
+    },[progress])
 
     return (
         <>
@@ -145,11 +153,9 @@ function Lesson() {
                                 })
                             })}
                         </div>
-                        <textarea id="textarea" className={styles.textarea}
-                                  onChange={(e) => setUserInput(e.currentTarget.value)} placeholder="Start typing..."
-                                  value={userInput} disabled={true}>
-
-                    </textarea>
+                        <div id="textarea" className={styles.textarea}>
+                            {userInput}<span className={styles.caret}>|</span>
+                    </div>
                     </div>
                 </div>
             }

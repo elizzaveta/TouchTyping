@@ -1,0 +1,79 @@
+.floatMenu{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    padding: 0 10px;
+    background: white;
+    border: 1px solid var(--dark-green);
+    height: 100%;
+    overflow-y: scroll;
+    border-radius: 5px;
+}
+.button{
+    padding: 10px;
+    border: none;
+    background: var(--dark-green);
+    border-radius: 5px;
+    cursor: pointer;
+}
+.nav{
+    position: sticky;
+    top:0;
+    background: white;
+    width: 99%;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--dark-green);
+}
+.closeIcon{
+    cursor: pointer;
+    color: var(--dark-green)
+}
+.wpmContainer{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 5px 0;
+}
+.wpmItem{
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 5px;
+    width: 120px;
+}
+.attemptDate{
+    font-size: 11px;
+    color: darkgrey;
+}
+.wpmValue{
+    text-align: center;
+}
+.deleteAttemptButton{
+    border: 1px solid gray;
+    border-radius: 5px;
+    /*background: rgba(255, 0, 0, 0.48);*/
+    padding: 1px 3px;
+    float: right;
+
+}
+
+.floatMenu::-webkit-scrollbar {
+    width: 5px;
+    height: 10px;
+}
+
+/* Track */
+.floatMenu::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+.floatMenu::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+.floatMenu::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

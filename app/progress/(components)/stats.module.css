@@ -1,0 +1,16 @@
+.accentText{
+    color: var(--dark-green)
+}
+.wrapper{
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    gap: 10px;
+    padding-top: 50px;
+}
+
+.infoMessage{
+    color: var(--dark-green);
+}
