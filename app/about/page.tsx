@@ -16,7 +16,7 @@ export default function About() {
             <ul>
                 <li>ReactJS</li>
                 <li>TypeScript</li>
-                <li>NextJS</li>
+                <li>NextJS 13</li>
                 <li>CSS Modules</li>
                 <li>LocalStorage</li>
             </ul>
