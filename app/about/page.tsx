@@ -7,10 +7,24 @@ export default function About() {
             <h2>Idea</h2>
             <p>Website is created for learning purposes: to practice NextJS. It is a Touch Typing Practice tool.</p>
             <h2>Features</h2>
+
             <ul>
                 <li>Touch Typing Practice</li>
+                <ul>
+                    <li>Lessons of different difficulty levels</li>
+                    <li>Calculation of typing speed and num of typing errors</li>
+                </ul>
                 <li>Progress Tracking</li>
+                <ul>
+                    <li>User's typing results are saved</li>
+                    <li>Typing speed is displayed as a chart</li>
+                    <li>Calculation of best and average typing speed</li>
+                    <li>Ability to delete selected typing attempts</li>
+                </ul>
                 <li>Touch Typing Cheat Sheet</li>
+                <ul>
+                    <li>Tips on Touch Typing</li>
+                </ul>
             </ul>
             <h2>Technologies</h2>
             <ul>
