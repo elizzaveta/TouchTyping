@@ -6,6 +6,7 @@ import {lessonType, sortedLessonsType} from "@/types/lesson-type";
 import styles from "./lessonsList.module.css"
 import LessonListBlock from "@/app/(typing-lessons)/lessonListBlock";
 import {compareLessonsTitles} from "@/functions/lessonFunctions";
+import LessonListSkeleton from "@/app/(loading-skeletons)/lessonListSkeleton";
 
 
 function LessonsList() {
@@ -35,14 +36,17 @@ function LessonsList() {
     return (
         <div className={styles.wrapper}>
             <h1>Lessons</h1>
-            {sortedLessons?.easy &&
+            {sortedLessons?.easy ?
                 <LessonListBlock title='Easy' lessons={sortedLessons.easy} hash={hash}></LessonListBlock>
+                :<LessonListSkeleton numOfLessons={5}/>
             }
-            {sortedLessons?.medium &&
+            {sortedLessons?.medium ?
                 <LessonListBlock title='Medium' lessons={sortedLessons.medium} hash={hash}></LessonListBlock>
+                : <LessonListSkeleton numOfLessons={8}/>
             }
-            {sortedLessons?.hard &&
+            {sortedLessons?.hard ?
                 <LessonListBlock title='Hard' lessons={sortedLessons.hard} hash={hash}></LessonListBlock>
+                : <LessonListSkeleton numOfLessons={1}/>
             }
         </div>
     );
