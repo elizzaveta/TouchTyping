@@ -18,7 +18,7 @@ Touch Typing Practice Tool. Check your typing speed
 
 ## Technologies
 
-Page is created using NextJS, ReactJS and Typescript
+Page is created using NextJS, ReactJS, Typescript and Redux
 
 ## Data
 
