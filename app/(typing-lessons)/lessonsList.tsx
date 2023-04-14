@@ -3,8 +3,8 @@ import React, {useEffect, useState} from 'react';
 import {getLessons} from "@/app/api/hello/route";
 import {lessonType, sortedLessonsType} from "@/types/lesson-type";
 
-import styles from "./lessons-list.module.css"
-import LessonListBlock from "@/app/(typing-lessons)/lesson-list-block";
+import styles from "./lessonsList.module.css"
+import LessonListBlock from "@/app/(typing-lessons)/lessonListBlock";
 import {compareLessonsTitles} from "@/functions/lessonFunctions";
 
 

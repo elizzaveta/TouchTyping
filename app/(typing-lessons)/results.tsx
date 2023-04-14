@@ -1,10 +1,9 @@
 import React from 'react';
 import styles from "./results.module.css"
-import {addResultsToLocalStorage} from "@/functions/localStorage";
 
 function Results(props: { numOfWords: number, numOfErrors: number, typingTime: number }) {
     const wpm: string = (props.numOfWords / (((props.typingTime) / 1000) / 60)).toFixed(0);
-    // addResultsToLocalStorage(wpm);
+
     return (
         <div className={styles.wrapper}>
             <h1>Results</h1>

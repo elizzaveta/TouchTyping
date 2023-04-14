@@ -42,10 +42,7 @@
     text-decoration: underline;
     text-decoration-color: var(--green);
 }
-.progressBar{
-    border-radius: 32px;
-    /*border: 1px solid var(--green);*/
-}
+
 .container{
     height: 7px;
 }

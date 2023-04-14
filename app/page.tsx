@@ -1,9 +1,11 @@
 'use client'
 import styles from './page.module.css'
 import React, {useEffect, useState} from "react";
-import LessonsList from "@/app/(typing-lessons)/lessons-list";
+import LessonsList from "@/app/(typing-lessons)/lessonsList";
 import Lesson from "@/app/(typing-lessons)/lesson";
 import Link from "next/link";
+import {store} from "@/app/redux/store";
+import {Provider} from "react-redux";
 
 export default function Home() {
     const [hash, setHash] = useState<string>()
@@ -24,6 +26,7 @@ export default function Home() {
 
     return (
         <main>
+            <Provider store={store}>
             <div className={styles.wrapper}>
                 <LessonsList/>
                 {hash
@@ -36,6 +39,8 @@ export default function Home() {
 
                 {/*<Test/>*/}
             </div>
+            </Provider>
+
         </main>
     )
 }

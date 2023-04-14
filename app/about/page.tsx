@@ -6,8 +6,16 @@ export default function About() {
             <h1 className={styles.title}>About this site</h1>
             <h2>Idea</h2>
             <p>Website is created for learning purposes: to practice NextJS. It is a Touch Typing Practice tool.</p>
+            <h2>Technologies</h2>
+            <ul>
+                <li>ReactJS</li>
+                <li>TypeScript</li>
+                <li>NextJS 13</li>
+                <li>Redux</li>
+                <li>CSS Modules</li>
+                <li>LocalStorage</li>
+            </ul>
             <h2>Features</h2>
-
             <ul>
                 <li>Touch Typing Practice</li>
                 <ul>
@@ -25,14 +33,6 @@ export default function About() {
                 <ul>
                     <li>Tips on Touch Typing</li>
                 </ul>
-            </ul>
-            <h2>Technologies</h2>
-            <ul>
-                <li>ReactJS</li>
-                <li>TypeScript</li>
-                <li>NextJS 13</li>
-                <li>CSS Modules</li>
-                <li>LocalStorage</li>
             </ul>
             <h2>API</h2>
             <p>Data is taken from public Api: <a href="https://sampleapis.com/api-list/typer" target="_blank">Sample
