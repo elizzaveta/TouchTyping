@@ -1,6 +1,6 @@
 import React from 'react';
 import {lessonType} from "@/types/lesson-type";
-import styles from "@/app/(typing-lessons)/lessons-list.module.css";
+import styles from "@/app/(typing-lessons)/lessonsList.module.css";
 
 function LessonListBlock(props: {title: string, lessons: lessonType[], hash?:string}) {
     const handleClick = (id: string) => {
