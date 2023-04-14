@@ -4,7 +4,7 @@
     border: 1px solid var(--green);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 .wrapper p{
     background: white;
@@ -15,11 +15,12 @@
     flex-direction: column;
     gap: 5px;
     width: max-content;
+    margin-bottom: 5px;
 }
 .lessonsList{
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 3px;
 }
 .lessonsList p{
     cursor: pointer;

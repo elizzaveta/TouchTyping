@@ -8,7 +8,11 @@
 }
 .nav{
     display: flex;
-    gap: 25px
+    gap: 25px;
+}
+.activePage{
+    text-decoration: underline;
+    color: var(--dark-green);
 }
 .name{
     font-family: Notable;
