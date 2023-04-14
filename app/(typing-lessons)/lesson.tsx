@@ -2,29 +2,28 @@
 import React, {useEffect, useState} from 'react';
 import {lessonType} from "@/types/lesson-type";
 import {getLesson} from "@/app/api/hello/route";
-import styles from "./lesson.module.css"
 import ProgressBar from "@ramonak/react-progress-bar";
 import Results from "@/app/(typing-lessons)/results";
 import {addResultsToLocalStorage} from "@/functions/localStorage";
-
-enum Progress {
-    NOT_STARTED,
-    IN_PROGRESS,
-    FINISHED
-}
-
+import {Progress} from "@/app/enums/ProgressEnum";
+import styles from "./lesson.module.css"
 
 function Lesson() {
     const [hash, setHash] = useState<string>(window.location.hash);
     const [lesson, setLesson] = useState<lessonType>()
+
     const [currentWord, setCurrentWord] = useState<Element | null>();
+    const [numOfErrors, setNumOfErrors] = useState<number>(0);
+
     const [progress, setProgress] = useState<Progress>(Progress.NOT_STARTED);
+
     const [userInput, setUserInput] = useState<string>("");
+
     const [numOfTypedWords, setNumOfTypedWords] = useState<number>(0);
     const [totalNumOfWords, setTotalNumOfWords] = useState<number>(1);
+
     const [startTime, setStartTime] = useState<number>(0);
     const [endTime, setEndTime] = useState<number>(0);
-    const [numOfErrors, setNumOfErrors] = useState<number>(0);
 
     // event listeners
     useEffect(() => {
@@ -39,7 +38,7 @@ function Lesson() {
     // hash change
     useEffect(() => {
         (async function () {
-            if(!hash) return
+            if (!hash) return
             await getLesson(hash.substring(1)).then(data => {
                 setLesson(data);
                 setTotalNumOfWords(data.steps.join(' ').split(' ').filter((i: string) => i).length)
@@ -48,7 +47,8 @@ function Lesson() {
 
         resetLesson()
     }, [hash])
-    function resetLesson(){
+
+    function resetLesson() {
         setUserInput('');
         setProgress(Progress.NOT_STARTED)
         setCurrentWord(null)
@@ -58,7 +58,7 @@ function Lesson() {
 
     // keydown handlers
     function handleKeydown(e: KeyboardEvent) {
-        if(progress === Progress.FINISHED){
+        if (progress === Progress.FINISHED) {
             e.preventDefault();
             return false;
         }
@@ -67,7 +67,7 @@ function Lesson() {
         } else if (e.key === 'Backspace') {
             handleBackSpace(e);
         } else if (e.key === 'Enter') {
-            if(numOfTypedWords+1===totalNumOfWords){
+            if (numOfTypedWords + 1 === totalNumOfWords) {
                 handleSpace(e);
             }
             e.preventDefault();
@@ -78,7 +78,7 @@ function Lesson() {
 
     function handleSpace(e: KeyboardEvent) {
         e.preventDefault();
-        if(userInput.substring(userInput.length-1, userInput.length)===' ') return false;
+        if (userInput.substring(userInput.length - 1, userInput.length) === ' ') return false;
         setUserInput(prevState => prevState + ' ')
         setNumOfTypedWords(prevState => prevState + 1);
         if (!currentWord) {
@@ -118,26 +118,25 @@ function Lesson() {
             if (currentWord.textContent === userWord) currentWord.className = styles.correct;
             else {
                 currentWord.className = styles.wrong;
-                setNumOfErrors(prevState => prevState+1)
+                setNumOfErrors(prevState => prevState + 1)
             }
             if (currentWord.nextElementSibling) currentWord.nextElementSibling.className = styles.current;
         }
     }, [currentWord])
 
-    useEffect(()=>{
+    useEffect(() => {
         const wpm = parseInt((numOfTypedWords / (((endTime - startTime) / 1000) / 60)).toFixed(0))
-        if(progress===Progress.FINISHED) addResultsToLocalStorage(wpm)
-    },[progress])
+        if (progress === Progress.FINISHED) addResultsToLocalStorage(wpm)
+    }, [progress])
 
     return (
         <>
             {lesson && lesson.steps && progress !== Progress.FINISHED &&
                 <div className={styles.wrapper}>
                     <h1 className={styles.title}>{lesson.title}</h1>
-                    {totalNumOfWords && <p>Total num of words: {totalNumOfWords}</p>}
                     <ProgressBar className={styles.progressBar}
                                  completed={numOfTypedWords * 100 / totalNumOfWords}
-                                 height='5px'
+                                 height='7px'
                                  baseBgColor='white'
                                  bgColor='rgb(205, 234, 192)'
                                  transitionDuration={'1'}
@@ -155,8 +154,10 @@ function Lesson() {
                         </div>
                         <div id="textarea" className={styles.textarea}>
                             {userInput}<span className={styles.caret}>|</span>
+                        </div>
                     </div>
-                    </div>
+                    {totalNumOfWords && <p>Total num of words: {totalNumOfWords}</p>}
+
                 </div>
             }
             {

@@ -1,7 +1,12 @@
+'use client'
 import Link from "next/link";
 import styles from "./navbar.module.css"
+import {usePathname} from "next/navigation";
+import {routesNames} from "@/app/consts/routesNames";
 
 function Navbar() {
+    const pathname = usePathname();
+
     return (
         <header className={styles.wrapper}>
             <Link href="/">
@@ -9,10 +14,11 @@ function Navbar() {
                 <p className={styles.description}>Touch Typing Practice</p>
             </Link>
             <div className={styles.nav}>
-                <Link href="/"><b>Home</b></Link>
-                <Link href="/cheat-sheet"><b>CheatSheet</b></Link>
-                <Link href="/progress"><b>Progress</b></Link>
-                <Link href="/about"><b>About</b></Link>
+                {routesNames.map((route)=>{
+                    return(
+                        <Link href={route.path}  className={pathname===route.path? styles.activePage : ''}><b>{route.title}</b></Link>
+                    )
+                })}
             </div>
         </header>
     );
