@@ -2,7 +2,7 @@
 import Link from "next/link";
 import styles from "./navbar.module.css"
 import {usePathname} from "next/navigation";
-import {routesNames} from "@/app/consts/routesNames";
+import {routesNames} from "@/consts/routesNames";
 
 function Navbar() {
     const pathname = usePathname();

@@ -6,6 +6,7 @@ import {lessonType, sortedLessonsType} from "@/types/lesson-type";
 import styles from "./lessonsList.module.css"
 import LessonListBlock from "@/app/(typing-lessons)/lessonListBlock";
 import {compareLessonsTitles} from "@/functions/lessonFunctions";
+import {GET} from "@/app/api/lessons/route";
 
 
 function LessonsList() {
@@ -18,7 +19,7 @@ function LessonsList() {
 
     useEffect(() => {
         (async function () {
-            await getLessons().then(data => {
+            await GET().then(data => {
                 setSortedLessons({
                     easy: data.filter((l: lessonType) => l.difficulty === 'easy').sort((a:lessonType, b:lessonType)=>compareLessonsTitles(a, b)),
                     medium: data.filter((l: lessonType) => l.difficulty === 'medium').sort((a:lessonType, b:lessonType)=>compareLessonsTitles(a, b)),

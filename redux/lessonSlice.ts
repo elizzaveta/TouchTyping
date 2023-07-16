@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {Progress} from "@/app/enums/ProgressEnum";
-import {RootState} from "@/app/redux/store";
+import {Progress} from "@/enums/ProgressEnum";
+import {RootState} from "@/redux/store";
 
 interface LessonState {
     progress: Progress,

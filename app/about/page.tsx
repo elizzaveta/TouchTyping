@@ -37,6 +37,7 @@ export default function About() {
             <h2>API</h2>
             <p>Data is taken from public Api: <a href="https://sampleapis.com/api-list/typer" target="_blank">Sample
                 APIs: Typer</a>.</p>
+            <p style={{color: "blue"}}>*currently API's down. So data is statically set*</p>
             <h2>Source Code</h2>
             <p>Source code of this project is placed on <a href="https://github.com/elizzaveta/TouchTyping"
                                                            target="_blank">GitHub</a>.</p>

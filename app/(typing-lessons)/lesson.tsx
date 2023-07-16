@@ -5,7 +5,7 @@ import {getLesson} from "@/app/api/hello/route";
 import ProgressBar from "@ramonak/react-progress-bar";
 import Results from "@/app/(typing-lessons)/results";
 import {addResultsToLocalStorage} from "@/functions/localStorage";
-import {Progress} from "@/app/enums/ProgressEnum";
+import {Progress} from "@/enums/ProgressEnum";
 import styles from "./lesson.module.css"
 import {
     addToUserInput, backspaceUserInput,
@@ -13,9 +13,10 @@ import {
     incrementNumOfTypedWords, resetNumOfErrors,
     resetNumOfTypedWords, resetState, resetUserInput,
     selectLesson, setEndTime, setProgress, setStartTime, setTotalNumOfWords
-} from "@/app/redux/lessonSlice";
+} from "@/redux/lessonSlice";
 import {useDispatch, useSelector} from "react-redux";
 import LessonProgressBar from "@/app/(typing-lessons)/lessonProgressBar";
+import {GET} from "@/app/api/lesson/route";
 
 function Lesson() {
     const currentLesson = useSelector(selectLesson);
@@ -38,9 +39,9 @@ function Lesson() {
     // hash change
     useEffect(() => {
         (async function () {
-            await getLesson(hash.substring(1)).then(data => {
+            await GET(hash.substring(1)).then(data => {
                 setLesson(data);
-                dispatch(setTotalNumOfWords(data.steps.join(' ').split(' ').filter((i: string) => i).length))
+                if(data) dispatch(setTotalNumOfWords(data.steps.join(' ').split(' ').filter((i: string) => i).length))
             });
         })();
         resetLesson()

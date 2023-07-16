@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import LessonsList from "@/app/(typing-lessons)/lessonsList";
 import Lesson from "@/app/(typing-lessons)/lesson";
 import Link from "next/link";
-import {store} from "@/app/redux/store";
+import {store} from "@/redux/store";
 import {Provider} from "react-redux";
 
 export default function Home() {
