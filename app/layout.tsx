@@ -1,7 +1,7 @@
 import './globals.css'
 import Navbar from "@/app/navbar";
 import React from "react";
-import {store} from "@/app/redux/store";
+import {store} from "@/redux/store";
 import {Provider} from "react-redux";
 
 export const metadata = {

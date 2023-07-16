@@ -1,5 +1,5 @@
 import {combineReducers} from "redux";
-import lessonSlice from "@/app/redux/lessonSlice";
+import lessonSlice from "@/redux/lessonSlice";
 
 export const rootReducer = combineReducers({
     currentLesson: lessonSlice
