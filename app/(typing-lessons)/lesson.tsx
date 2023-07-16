@@ -2,29 +2,29 @@
 import React, {useEffect, useState} from 'react';
 import {lessonType} from "@/types/lesson-type";
 import {getLesson} from "@/app/api/hello/route";
-import styles from "./lesson.module.css"
 import ProgressBar from "@ramonak/react-progress-bar";
 import Results from "@/app/(typing-lessons)/results";
 import {addResultsToLocalStorage} from "@/functions/localStorage";
-
-enum Progress {
-    NOT_STARTED,
-    IN_PROGRESS,
-    FINISHED
-}
-
+import {Progress} from "@/enums/ProgressEnum";
+import styles from "./lesson.module.css"
+import {
+    addToUserInput, backspaceUserInput,
+    incrementNumOfErrors,
+    incrementNumOfTypedWords, resetNumOfErrors,
+    resetNumOfTypedWords, resetState, resetUserInput,
+    selectLesson, setEndTime, setProgress, setStartTime, setTotalNumOfWords
+} from "@/redux/lessonSlice";
+import {useDispatch, useSelector} from "react-redux";
+import LessonProgressBar from "@/app/(typing-lessons)/lessonProgressBar";
+import {GET} from "@/app/api/lesson/route";
 
 function Lesson() {
+    const currentLesson = useSelector(selectLesson);
+    const dispatch = useDispatch();
+
     const [hash, setHash] = useState<string>(window.location.hash);
     const [lesson, setLesson] = useState<lessonType>()
     const [currentWord, setCurrentWord] = useState<Element | null>();
-    const [progress, setProgress] = useState<Progress>(Progress.NOT_STARTED);
-    const [userInput, setUserInput] = useState<string>("");
-    const [numOfTypedWords, setNumOfTypedWords] = useState<number>(0);
-    const [totalNumOfWords, setTotalNumOfWords] = useState<number>(1);
-    const [startTime, setStartTime] = useState<number>(0);
-    const [endTime, setEndTime] = useState<number>(0);
-    const [numOfErrors, setNumOfErrors] = useState<number>(0);
 
     // event listeners
     useEffect(() => {
@@ -39,62 +39,60 @@ function Lesson() {
     // hash change
     useEffect(() => {
         (async function () {
-            if(!hash) return
-            await getLesson(hash.substring(1)).then(data => {
+            await GET(hash.substring(1)).then(data => {
                 setLesson(data);
-                setTotalNumOfWords(data.steps.join(' ').split(' ').filter((i: string) => i).length)
+                if(data) dispatch(setTotalNumOfWords(data.steps.join(' ').split(' ').filter((i: string) => i).length))
             });
         })();
-
         resetLesson()
     }, [hash])
-    function resetLesson(){
-        setUserInput('');
-        setProgress(Progress.NOT_STARTED)
+
+    function resetLesson() {
+        dispatch(resetState())
         setCurrentWord(null)
-        setNumOfTypedWords(0);
-        setNumOfErrors(0)
     }
 
     // keydown handlers
     function handleKeydown(e: KeyboardEvent) {
-        if(progress === Progress.FINISHED){
+        if (currentLesson.progress === Progress.FINISHED) {
             e.preventDefault();
             return false;
         }
+
         if (e.code === 'Space') {
             handleSpace(e);
         } else if (e.key === 'Backspace') {
-            handleBackSpace(e);
+            handleBackSpace();
         } else if (e.key === 'Enter') {
-            if(numOfTypedWords+1===totalNumOfWords){
+            e.preventDefault();
+            if (currentLesson.numOfTypedWords + 1 === currentLesson.totalNumOfWords) {
                 handleSpace(e);
             }
-            e.preventDefault();
         } else if (e.key.length === 1) {
-            setUserInput(prevState => prevState + e.key)
+            if(currentLesson.userInput === '') dispatch(setStartTime(new Date().getTime()))
+            dispatch(addToUserInput(e.key))
         }
     }
 
     function handleSpace(e: KeyboardEvent) {
         e.preventDefault();
-        if(userInput.substring(userInput.length-1, userInput.length)===' ') return false;
-        setUserInput(prevState => prevState + ' ')
-        setNumOfTypedWords(prevState => prevState + 1);
+
+        if (currentLesson.userInput.substring(currentLesson.userInput.length - 1, currentLesson.userInput.length) === ' ') return false;
+        dispatch(addToUserInput(' '))
+        dispatch(incrementNumOfTypedWords())
+
         if (!currentWord) {
             let lessonWords = document.getElementById("lessonText");
             if (lessonWords) setCurrentWord(lessonWords.firstElementChild);
-            setStartTime(new Date().getTime())
         } else {
             setCurrentWord(prevState => prevState?.nextElementSibling);
         }
-        // maybe move to timer later ??
-        if (progress === Progress.NOT_STARTED) setProgress(Progress.IN_PROGRESS)
+        if (currentLesson.progress === Progress.NOT_STARTED) dispatch(setProgress(Progress.IN_PROGRESS))
     }
 
-    function handleBackSpace(e: KeyboardEvent) {
-        if (userInput.substring(userInput.length - 1) !== ' ') {
-            setUserInput(prevState => prevState.substring(0, prevState.length - 1))
+    function handleBackSpace() {
+        if (currentLesson.userInput.substring(currentLesson.userInput.length - 1) !== ' ') {
+            dispatch(backspaceUserInput())
         }
     }
 
@@ -105,44 +103,37 @@ function Lesson() {
             currentWord?.nextElementSibling?.scrollIntoView({block: 'center', behavior: 'smooth'})
         }, 0)
 
-        if (!currentWord?.nextElementSibling && progress === Progress.IN_PROGRESS) {
-            setProgress(Progress.FINISHED);
-            setEndTime(new Date().getTime())
-
+        if (!currentWord?.nextElementSibling && currentLesson.progress === Progress.IN_PROGRESS) {
+            dispatch(setProgress(Progress.FINISHED));
+            dispatch(setEndTime(new Date().getTime()))
         }
 
         if (currentWord) {
-            const userWords = userInput.split(" ").filter(i => i);
+            const userWords = currentLesson.userInput.split(" ").filter(i => i);
             const userWord = userWords[userWords.length - 1];
 
             if (currentWord.textContent === userWord) currentWord.className = styles.correct;
             else {
                 currentWord.className = styles.wrong;
-                setNumOfErrors(prevState => prevState+1)
+                dispatch(incrementNumOfErrors())
             }
             if (currentWord.nextElementSibling) currentWord.nextElementSibling.className = styles.current;
         }
     }, [currentWord])
 
-    useEffect(()=>{
-        const wpm = parseInt((numOfTypedWords / (((endTime - startTime) / 1000) / 60)).toFixed(0))
-        if(progress===Progress.FINISHED) addResultsToLocalStorage(wpm)
-    },[progress])
+    useEffect(() => {
+        if (currentLesson.progress === Progress.FINISHED){
+            const wpm = parseInt((currentLesson.numOfTypedWords / (((currentLesson.endTime - currentLesson.startTime) / 1000) / 60)).toFixed(0))
+            addResultsToLocalStorage(wpm)
+        }
+    }, [currentLesson.progress])
 
     return (
         <>
-            {lesson && lesson.steps && progress !== Progress.FINISHED &&
+            {lesson && lesson.steps && currentLesson.progress !== Progress.FINISHED &&
                 <div className={styles.wrapper}>
                     <h1 className={styles.title}>{lesson.title}</h1>
-                    {totalNumOfWords && <p>Total num of words: {totalNumOfWords}</p>}
-                    <ProgressBar className={styles.progressBar}
-                                 completed={numOfTypedWords * 100 / totalNumOfWords}
-                                 height='5px'
-                                 baseBgColor='white'
-                                 bgColor='rgb(205, 234, 192)'
-                                 transitionDuration={'1'}
-                                 transitionTimingFunction={'linear'}
-                                 isLabelVisible={false}/>
+                    <LessonProgressBar completed={currentLesson.numOfTypedWords * 100 / currentLesson.totalNumOfWords}/>
                     <div>
                         <div id="lessonText" className={styles.lessonText}>
                             {lesson.steps.map(step => {
@@ -154,15 +145,17 @@ function Lesson() {
                             })}
                         </div>
                         <div id="textarea" className={styles.textarea}>
-                            {userInput}<span className={styles.caret}>|</span>
+                            {currentLesson.userInput}<span className={styles.caret}>|</span>
+                        </div>
                     </div>
-                    </div>
+                    {currentLesson.totalNumOfWords && <p>Total num of words: {currentLesson.totalNumOfWords}</p>}
+
                 </div>
             }
             {
-                progress === Progress.FINISHED &&
+                currentLesson.progress === Progress.FINISHED &&
                 <div>
-                    <Results numOfWords={numOfTypedWords} numOfErrors={numOfErrors} typingTime={endTime - startTime}/>
+                    <Results numOfWords={currentLesson.numOfTypedWords} numOfErrors={currentLesson.numOfErrors} typingTime={currentLesson.endTime - currentLesson.startTime}/>
                     <button className={styles.button} onClick={resetLesson}>Try Again</button>
                 </div>
             }
